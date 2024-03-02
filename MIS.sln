@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbClasses", "DbClasses\DbClasses.csproj", "{99EEF82A-D515-4387-BCFC-956CB773E75C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMIS", "WebMIS\WebMIS.csproj", "{75B395BD-9DE0-4BC7-977E-F8C6C0376E0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{99EEF82A-D515-4387-BCFC-956CB773E75C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99EEF82A-D515-4387-BCFC-956CB773E75C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99EEF82A-D515-4387-BCFC-956CB773E75C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75B395BD-9DE0-4BC7-977E-F8C6C0376E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75B395BD-9DE0-4BC7-977E-F8C6C0376E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75B395BD-9DE0-4BC7-977E-F8C6C0376E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75B395BD-9DE0-4BC7-977E-F8C6C0376E0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
