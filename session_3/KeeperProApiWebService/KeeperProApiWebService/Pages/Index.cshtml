@@ -1,0 +1,257 @@
+﻿@page
+@model WebApplication1.Pages.IndexModel
+@{
+}
+
+<header>
+    <div class="logout_container">
+        <button id="logout" onclick="startLogout()" style="display: none">
+            Выйти
+        </button>
+
+        <button id="profile">
+            Войти
+        </button>
+    </div>
+</header>
+
+<section id="register_section" style="display: none">
+    <div class="cont">
+        <h1 class="header_page">
+            Вход
+        </h1>
+
+        <div class="column">
+            <input placeholder="Почта" id="email_reg" />
+            <input placeholder="Пароль" id="password_reg" />
+            <button class="reg_btn" onclick="register()">Зарегистрироваться</button>
+            <button onclick="login()">Войти</button>
+        </div>
+    </div>
+</section>
+
+<section id="bids_list" style="display: none">
+    <h1 class="header_page">
+        Список заявок
+    </h1>
+
+    <div id="bids_html">
+
+    </div>
+</section>
+
+<style>
+    input {
+        padding: 5px;
+        margin: 5px;
+    }
+
+    button {
+        padding: 5px;
+        margin: 5px;
+        background-color: orange;
+    }
+
+    body {
+        min-height: 100vh;
+    }
+
+    * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-family: sans-serif;
+    }
+
+    .header_page {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #bids_html {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .bid_html {
+        margin: 10px;
+        padding: 20px;
+        border: 1px solid orange;
+    }
+
+    .logout_container {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    #logout {
+        padding: 5px 10px;
+        margin: 5px;
+    }
+
+    #email_reg {
+        display: block;
+    }
+
+    #password_reg {
+        display: block;
+    }
+
+    #reg_btn {
+        display: block;
+    }
+
+    .cont {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .column {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 200px;
+    }
+</style>
+
+<script>
+    const email_reg = document.querySelector("#email_reg")
+    const password_reg = document.querySelector("#password_reg")
+
+    const email_login = document.querySelector("#email_login")
+    const password_login = document.querySelector("#password_login")
+
+    const bids_html = document.querySelector("#bids_html")
+
+    const register_section = document.querySelector("#register_section")
+    const bids_list = document.querySelector("#bids_list")
+
+    const logout = document.querySelector("#logout")
+    const profile = document.querySelector("#profile")
+
+    async function register() {
+        const response = await fetch("/users/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email_reg.value,
+                password: password_reg.value
+            })
+        })
+
+        const data = await response.json()
+        alert(data.message)
+    }
+
+    async function login() {
+        const response = await fetch("/users/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email_reg.value,
+                password: password_reg.value
+            })
+        })
+
+        const data = await response.json()
+        if (data.message) {
+            alert(data.message)
+            return;
+        }
+
+        alert("Авторизация прошла успешно")
+        localStorage.setItem("token", data.token)
+        getHistory(data.token)
+    }
+
+    async function getHistory(token) {
+        const response = await fetch("/bids/history", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token
+            }
+        })
+
+        const data = await response.json()
+        if (data.message) {
+            alert(data.message)
+            removeToken()
+            return;
+        }
+
+        if (data.bids.length < 1) {
+
+            alert("Заявок не было оформлено")
+        }
+        
+        for (const index in data.bids) {
+            const bid = data.bids[index]
+            const div = document.createElement("div")
+            const type = document.createElement("div")
+            type.innerHTML = "Тип заявки: " + bid.type.name
+            div.appendChild(type)
+            div.classList.add("bid_html")
+
+            const department = document.createElement("div")
+            department.innerHTML = "Подразделение: " + bid.employee.department.name
+            div.appendChild(department)
+
+            const status = document.createElement("div")
+            status.innerHTML = "Статус: " + bid.status.name
+            div.appendChild(status)
+
+            const statusNote = document.createElement("div")
+            statusNote.innerHTML = "Причина: " + (bid.statusNote ?? "Нет")
+            div.appendChild(statusNote)
+
+            const visitDate = document.createElement("div")
+            visitDate.innerHTML = "Дата посещения: " + bid.visitDate
+            div.appendChild(visitDate)
+
+            const visitTime = document.createElement("div")
+            visitTime.innerHTML = "Время посещения: " + bid.visitTime
+            div.appendChild(visitTime)
+
+            bids_html.appendChild(div)
+        }
+
+        register_section.style.display = "none"
+        bids_list.style.display = "block"
+        logout.style.display = "block"
+        profile.style.display = "none"
+    }
+
+    function startLogout() {
+
+        removeToken()
+    }
+
+    function removeToken() {
+        localStorage.removeItem("token")
+        register_section.style.display = "block"
+        bids_list.style.display = "none"
+        logout.style.display = "none"
+        bids_html.innerHTML = ""
+        profile.style.display = "block"
+    }
+
+    const token = localStorage.getItem("token")
+    if (token) {
+        getHistory(token)
+    }
+    else {
+        register_section.style.display = "block"
+        bids_list.style.display = "none"
+        logout.style.display = "none"
+    }
+</script>

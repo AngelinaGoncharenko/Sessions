@@ -1,0 +1,185 @@
+1. POST http://localhost:5162/users/register
+Регистрация нового пользователя
+Body JSON:
+{
+    "email": "vasyaaa@test.ru",
+    "password": "2Dasduv23hb`12h313"
+}
+Все поля обязательны
+Успешный ответ: 
+{
+    "message": "Пользователь успешно зарегестрирован"
+}
+
+2. POST http://localhost:5162/users/login
+Авторизация пользователя
+Body JSON:
+{
+    "email": "vasyaaa@test.ru",
+    "password": "2Dasduv23hb`12h313"
+}
+Все поля обязательны
+Успешный ответ: 
+{
+    "token": "dmFzeWFhYUB0ZXN0LnJ1"
+}
+token - нужен для последующий аунтефикации на сайте
+
+3. GET http://localhost:5162/bids/history
+Получение истории отправленных пользователем заявок
+Headers Authorization = token
+token (Получается при авторизации пользователя)
+Успешный ответ:
+{
+    "bids": []
+}
+
+4. GET http://localhost:5162/departments/list
+Получить список подразделений
+Данных на вход нет
+Успешный ответ:
+{
+    "departmentsList": [
+        {
+            "name": "Администрация"
+        },
+        {
+            "name": "Планирование"
+        },
+        {
+            "name": "Производство"
+        },
+        {
+            "name": "Сбыт"
+        },
+        {
+            "name": "Служба безопасности"
+        }
+    ]
+}
+
+5. GET http://localhost:5162/employees/list
+Получить список сотрудников
+Данных на вход нет
+Успешный ответ:
+{
+    "employeesList": [
+        {
+            "code": "9362832",
+            "secondName": "Архипов",
+            "firstName": "Тимофей",
+            "lastName": "Васильевич",
+            "department": {
+                "name": "Служба безопасности"
+            },
+            "division": null,
+            "password": "Bu?BHCtwDFin",
+            "bids": []
+        },
+        {
+            "code": "9367788",
+            "secondName": "Фомичева",
+            "firstName": "Авдотья",
+            "lastName": "Трофимовна",
+            "department": {
+                "name": "Производство"
+            },
+            "division": null,
+            "password": "b3uWS6#Thuvq",
+            "bids": []
+        }
+    ]
+}
+
+6. GET http://localhost:5162/targets/list
+Получить список целей посещения
+Данных на вход нет
+Успешный ответ:
+{
+    "visitTargetsList": [
+        {
+            "name": "Интерес"
+        },
+        {
+            "name": "Подпись"
+        },
+        {
+            "name": "Проверка документов"
+        }
+    ]
+}
+
+7. POST http://localhost:5162/bids/create
+Создать заявку на посещение
+Body JSON:
+{
+    "employee": {
+        "code": "9362832"
+    },
+    "startDate": "2023-03-24",
+    "endDate": "2023-03-25",
+    "visitTarget": {
+        "Name": "Проверка документов"
+    },
+    "visitors": [
+        {
+            "secondName": "Петров",
+            "firstName": "Вася",
+            "lastName": "Васильевич",
+            "phoneNumber": "+7 (675) 593-89-30",
+            "user": {
+                "email": "Taisiya176@hotmail.com"
+            },
+            "birthDay": "2000-02-02",
+            "passportSeries": "1234",
+            "passportNumber": "123456",
+            "organization": "ООО",
+            "note": "Хочу на экскурсию",
+            "photo": "base64Image"
+        },
+        {
+            "secondName": "Петрова",
+            "firstName": "Василиса",
+            "lastName": "Васильевична",
+            "phoneNumber": "+7 (655) 593-89-30",
+            "user": {
+                "email": "Taisiy123a176@hotmail.com"
+            },
+            "birthDay": "2000-02-02",
+            "passportSeries": "1224",
+            "passportNumber": "123356",
+            "organization": "ООО",
+            "note": "Хочу на экскурсию",
+            "photo": "base64Image"
+        }
+    ],
+    "documents": [
+        {
+            "source": "base64document"
+        }
+    ]
+}
+lastName,phoneNumber,organization,note,photo  - необязательные поля
+documents[].source - pdf файл в формате base64
+visitors[].photo - jpg файл в формате base64
+Все остальные поля обязательны для заполнения
+Успешный ответ:
+{
+    "message": "Заявка создана успешно"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
